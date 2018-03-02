@@ -8,5 +8,3 @@ services:
       POSTGRES_USER: connectionleak
       POSTGRES_PASSWORD: connectionleak
       POSTGRES_DB: connectionleak
-    volumes:
-    - ./init.sql:/docker-entrypoint-initdb.d/init.sql

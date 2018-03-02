@@ -1,10 +1,8 @@
 package com.connectionleak.demo;
 
-import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentHashMap.KeySetView;
 import java.util.function.Consumer;
-import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.SseEventBuilder;
 
@@ -63,9 +61,9 @@ class SseObservable {
       // This is normal behavior when a client disconnects.
       try {
         emitter.completeWithError(ex);
+        System.out.println("Marked SseEmitter as complete with an error.");
       } catch (Exception completionException) {
-        System.out.println("Failed to complete emitter after send error. "
-            + "Assuming that the completion event was already fired.");
+        System.out.println("Failed to mark SseEmitter as complete on error.");
       }
     }
   }

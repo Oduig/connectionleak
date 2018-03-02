@@ -13,17 +13,17 @@ public class ConnectionLeakController {
 
   private static final long SSE_TIMEOUT_MS = 60_000L;
 
-  private final DerpRepository derpRepository;
+  private final DerpService derpService;
   private final SseObservable obs;
 
-  ConnectionLeakController(DerpRepository derpRepository) {
-    this.derpRepository = derpRepository;
+  ConnectionLeakController(DerpService derpService) {
+    this.derpService = derpService;
     obs = new SseObservable(SSE_TIMEOUT_MS);
   }
 
   @GetMapping("")
   public SseEmitter home() {
-    derpRepository.derp();
+    derpService.derp();
     return obs.subscribeSse();
   }
 
