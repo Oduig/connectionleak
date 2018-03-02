@@ -31,9 +31,20 @@ class SseObservable {
     };
 
     subscriptions.add(subscription);
+    System.out.println("Subscription added: there are " + subscriptions.size() + " subscribers");
 
-    emitter.onCompletion(() -> subscriptions.remove(subscription));
-    emitter.onTimeout(() -> subscriptions.remove(subscription));
+    emitter.onCompletion(() -> {
+      subscriptions.remove(subscription);
+      System.out.println("Subscription completed: there are " + subscriptions.size() + " subscribers");
+    });
+    emitter.onError(error -> {
+      subscriptions.remove(subscription);
+      System.out.println("Subscription crashed: there are " + subscriptions.size() + " subscribers");
+    });
+    emitter.onTimeout(() -> {
+      subscriptions.remove(subscription);
+      System.out.println("Subscription timed out: there are " + subscriptions.size() + " subscribers");
+    });
 
     // Firefox doesn't call the EventSource.onopen when the connection is established.
     // Instead, it requires at least one event to be sent. A meaningless comment event is used.
@@ -48,11 +59,14 @@ class SseObservable {
   private void trySend(SseEmitter emitter, SseEmitter.SseEventBuilder event) {
     try {
       emitter.send(event);
-    } catch (IllegalStateException | ClientAbortException ex) {
-      // Completed outbound SSE stream. This is normal behavior when a client disconnects.
-      emitter.complete();
     } catch (Exception ex) {
-      throw new RuntimeException(ex);
+      // This is normal behavior when a client disconnects.
+      try {
+        emitter.completeWithError(ex);
+      } catch (Exception completionException) {
+        System.out.println("Failed to complete emitter after send error. "
+            + "Assuming that the completion event was already fired.");
+      }
     }
   }
 }
