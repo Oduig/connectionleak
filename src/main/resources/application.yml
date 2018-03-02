@@ -4,30 +4,6 @@ spring:
   h2:
     console:
       enabled: false
-  jpa:
-    database: POSTGRESQL
-    show-sql: false
-    open-in-view: true
-    properties:
-      hibernate:
-        temp:
-          use_jdbc_metadata_defaults: false
-  datasource:
-    platform: postgres
-    driver-class-name: org.postgresql.Driver
-    name: connectionleak-demo
-    url: jdbc:postgresql://localhost:54321/connectionleak
-    username: connectionleak
-    password: connectionleak
-    hikari:
-      poolName: SpringBootJPAHikariCP
-      minimum-idle: 2
-      maximum-pool-size: 5
-      leak-detection-threshold: 10000
-
-logging:
-  level:
-    com.zaxxer.hikari: debug
 
 server:
   port: 8088
