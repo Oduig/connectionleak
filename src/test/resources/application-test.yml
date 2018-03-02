@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    include: default
+    active: default,test
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test
+    username: test
+    password: test
